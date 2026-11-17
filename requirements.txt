@@ -1,0 +1,13 @@
+pandas==3.1.1
+numpy==2.5.5
+scikit-learn==1.9.1
+matplotlib==3.11.2
+streamlit==1.67.0
+joblib==1.6.0
+fastapi==0.163.1
+pydantic==2.14.3
+uvicorn==0.54.0
+reportlab==5.1.0
+nbformat==5.11.1
+pytest==9.2.0
+httpx==0.28.1
