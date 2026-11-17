@@ -1,0 +1,226 @@
+{
+  "selected_model": "Random forest",
+  "threshold": 0.21,
+  "model_version": "0b98110a56ec",
+  "created_at": "2026-11-17T06:28:59.221788+00:00",
+  "dataset_sha256": "dc6630cd9b1f0f853922fad78a1b6436570d3f1ec863f1dd5c4340ac56bc8a8e",
+  "seed": 42,
+  "python_version": "3.12.14",
+  "sklearn_version": "1.9.1",
+  "features": [
+    "Type",
+    "Air temperature [K]",
+    "Process temperature [K]",
+    "Rotational speed [rpm]",
+    "Torque [Nm]",
+    "Tool wear [min]"
+  ],
+  "rows": 10000,
+  "failures": 339,
+  "split_sizes": {
+    "train": 6000,
+    "validation": 2000,
+    "test": 2000
+  },
+  "split_failures": {
+    "train": 203,
+    "validation": 68,
+    "test": 68
+  },
+  "selection": "Highest validation F2; threshold grid 0.05 to 0.95, step 0.01; ties prefer higher threshold.",
+  "validation": {
+    "Dummy baseline": {
+      "accuracy": 0.966,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "f2": 0.0,
+      "average_precision": 0.034,
+      "roc_auc": 0.5,
+      "confusion_matrix": [
+        [
+          1932,
+          0
+        ],
+        [
+          68,
+          0
+        ]
+      ]
+    },
+    "Logistic regression": {
+      "accuracy": 0.946,
+      "precision": 0.3275862068965517,
+      "recall": 0.5588235294117647,
+      "f1": 0.41304347826086957,
+      "f2": 0.4896907216494845,
+      "average_precision": 0.40716789954175675,
+      "roc_auc": 0.881051333576909,
+      "confusion_matrix": [
+        [
+          1854,
+          78
+        ],
+        [
+          30,
+          38
+        ]
+      ]
+    },
+    "Decision tree": {
+      "accuracy": 0.9735,
+      "precision": 0.6056338028169014,
+      "recall": 0.6323529411764706,
+      "f1": 0.6187050359712231,
+      "f2": 0.6268221574344023,
+      "average_precision": 0.5601815246908967,
+      "roc_auc": 0.835415144318597,
+      "confusion_matrix": [
+        [
+          1904,
+          28
+        ],
+        [
+          25,
+          43
+        ]
+      ]
+    },
+    "Random forest": {
+      "accuracy": 0.961,
+      "precision": 0.4576271186440678,
+      "recall": 0.7941176470588235,
+      "f1": 0.5806451612903226,
+      "f2": 0.6923076923076923,
+      "average_precision": 0.6953390979748412,
+      "roc_auc": 0.9545845512117891,
+      "confusion_matrix": [
+        [
+          1868,
+          64
+        ],
+        [
+          14,
+          54
+        ]
+      ]
+    }
+  },
+  "test": {
+    "Dummy baseline": {
+      "accuracy": 0.966,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "f2": 0.0,
+      "average_precision": 0.034,
+      "roc_auc": 0.5,
+      "confusion_matrix": [
+        [
+          1932,
+          0
+        ],
+        [
+          68,
+          0
+        ]
+      ]
+    },
+    "Logistic regression": {
+      "accuracy": 0.9485,
+      "precision": 0.34782608695652173,
+      "recall": 0.5882352941176471,
+      "f1": 0.4371584699453552,
+      "f2": 0.5167958656330749,
+      "average_precision": 0.4086765639484345,
+      "roc_auc": 0.9045944464742419,
+      "confusion_matrix": [
+        [
+          1857,
+          75
+        ],
+        [
+          28,
+          40
+        ]
+      ]
+    },
+    "Decision tree": {
+      "accuracy": 0.9725,
+      "precision": 0.5822784810126582,
+      "recall": 0.6764705882352942,
+      "f1": 0.6258503401360545,
+      "f2": 0.6552706552706553,
+      "average_precision": 0.6108753026657217,
+      "roc_auc": 0.8715899403239558,
+      "confusion_matrix": [
+        [
+          1899,
+          33
+        ],
+        [
+          22,
+          46
+        ]
+      ]
+    },
+    "Random forest": {
+      "accuracy": 0.9675,
+      "precision": 0.5135135135135135,
+      "recall": 0.8382352941176471,
+      "f1": 0.6368715083798883,
+      "f2": 0.7441253263707572,
+      "average_precision": 0.6893777798565561,
+      "roc_auc": 0.9767309097552065,
+      "confusion_matrix": [
+        [
+          1878,
+          54
+        ],
+        [
+          11,
+          57
+        ]
+      ]
+    }
+  },
+  "thresholds": {
+    "Dummy baseline": 0.5,
+    "Logistic regression": 0.8,
+    "Decision tree": 0.91,
+    "Random forest": 0.21
+  },
+  "recall_bootstrap_95_ci": [
+    0.75,
+    0.9264705882352942
+  ],
+  "false_negative_modes": {
+    "TWF": 6,
+    "HDF": 0,
+    "PWF": 2,
+    "OSF": 2,
+    "RNF": 0
+  },
+  "training_ranges": {
+    "Air temperature [K]": [
+      295.3,
+      304.5
+    ],
+    "Process temperature [K]": [
+      305.7,
+      313.8
+    ],
+    "Rotational speed [rpm]": [
+      1168.0,
+      2886.0
+    ],
+    "Torque [Nm]": [
+      3.8,
+      76.6
+    ],
+    "Tool wear [min]": [
+      0.0,
+      253.0
+    ]
+  }
+}
