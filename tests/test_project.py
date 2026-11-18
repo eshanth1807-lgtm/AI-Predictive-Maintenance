@@ -44,7 +44,12 @@ def test_preprocessor_fits_training_only():
     data = pd.read_csv(DATA_PATH)
     indices, _, _ = split_indices(data)
     scaler = load_bundle()['pipeline'].named_steps['preprocess'].named_transformers_['numeric']
-    np.testing.assert_allclose(scaler.mean_, data.iloc[indices][FEATURES[1:]].mean())
+    pipeline = load_bundle()['pipeline']
+    training = data.iloc[indices][FEATURES]
+    if 'interactions' in pipeline.named_steps:
+        training = pipeline.named_steps['interactions'].transform(training)
+    numeric = pipeline.named_steps['preprocess'].transformers_[1][2]
+    np.testing.assert_allclose(scaler.mean_, training[numeric].mean())
 
 
 def test_threshold_selection_uses_f2():
