@@ -12,7 +12,8 @@ import pandas as pd
 import sklearn
 from sklearn.compose import ColumnTransformer
 from sklearn.dummy import DummyClassifier
-from sklearn.ensemble import RandomForestClassifier
+from sklearn.ensemble import RandomForestClassifier, HistGradientBoostingClassifier
+from maintenance.features import OperatingFeatures
 from sklearn.inspection import permutation_importance
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import (accuracy_score, average_precision_score, confusion_matrix,
@@ -64,6 +65,7 @@ def main():
     x_val, y_val = data.iloc[validation][FEATURES], data.iloc[validation][TARGET]
     x_test, y_test = data.iloc[test][FEATURES], data.iloc[test][TARGET]
     classifiers = {
+        'Gradient boosting with operating interactions': HistGradientBoostingClassifier(max_iter=250, max_leaf_nodes=15, learning_rate=0.06, l2_regularization=2, early_stopping=False, random_state=SEED),
         'Dummy baseline': DummyClassifier(strategy='prior'),
         'Logistic regression': LogisticRegression(class_weight='balanced', max_iter=2000, random_state=SEED),
         'Decision tree': DecisionTreeClassifier(max_depth=8, min_samples_leaf=5, class_weight='balanced', random_state=SEED),
@@ -72,10 +74,13 @@ def main():
     }
     pipelines, thresholds, validation_metrics = {}, {}, {}
     for name, classifier in classifiers.items():
+        engineered = name == 'Gradient boosting with operating interactions'
+        numeric = FEATURES[1:] + (['Temperature gap', 'Mechanical power', 'Wear torque'] if engineered else [])
         preprocessor = ColumnTransformer([
             ('type', OneHotEncoder(handle_unknown='error', sparse_output=False), ['Type']),
-            ('numeric', StandardScaler(), FEATURES[1:])], remainder='drop')
-        pipeline = Pipeline([('preprocess', preprocessor), ('classifier', classifier)])
+            ('numeric', StandardScaler(), numeric)], remainder='drop')
+        steps = [('interactions', OperatingFeatures())] if engineered else []
+        pipeline = Pipeline(steps + [('preprocess', preprocessor), ('classifier', classifier)])
         pipeline.fit(x_train, y_train)
         scores = pipeline.predict_proba(x_val)[:, 1]
         threshold = 0.5 if name == 'Dummy baseline' else choose_threshold(y_val, scores)
@@ -93,7 +98,7 @@ def main():
     reports.mkdir(exist_ok=True)
     (ROOT / 'model').mkdir(exist_ok=True)
     digest = hashlib.sha256(DATA_PATH.read_bytes()).hexdigest()
-    version = hashlib.sha256((digest + selected + str(threshold) + sklearn.__version__ + 'v1').encode()).hexdigest()[:12]
+    version = hashlib.sha256((digest + selected + str(threshold) + sklearn.__version__ + 'v2').encode()).hexdigest()[:12]
     ranges = {name: [float(x_train[name].min()), float(x_train[name].max())] for name in FEATURES[1:]}
     joblib.dump(dict(pipeline=selected_pipeline, features=FEATURES, threshold=threshold,
                      selected_model=selected, training_ranges=ranges, version=version),

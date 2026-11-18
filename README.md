@@ -57,9 +57,9 @@ pins direct dependencies. Downloading/installing requires internet access; infer
 - Saved model is exactly the training-fitted model evaluated on test data; no later refit.
 
 See `reports/metrics.json` for actual results and `research_report.pdf` for interpretation.
-The included random forest uses threshold **0.21**: test recall **83.82%**, precision
-**51.35%**, F1 **0.637**, and accuracy **96.75%**. It detects **57/68** failures,
-misses **11**, and produces **54** false alarms. All **20 automated tests** passed after the error-handling review. See `reports/screenshots/dashboard.jpg` for the live preview.
+The validation-selected gradient boosting model with operating interactions uses threshold **0.26**: test recall **85.29%**, precision **81.69%**, F1 **0.835**, and accuracy **98.85%**. It detects **58/68** failures, misses **10**, and produces **13** false alarms. The previous random forest achieved 96.75% accuracy, 51.35% precision and 83.82% recall. The added features are temperature difference, mechanical power, and wear × torque, calculated only from available inputs. No failure-mode indicators are used.
+
+The existing test set was inspected in earlier versions. This is a development comparison, not a new independent confirmation; validate on fresh equipment data before claiming generalization. The older screenshot is illustrative and may show earlier metrics.
 Scores are **uncalibrated model scores**, not real-world failure probabilities.
 The threshold is a research choice, not a measured maintenance cost optimum.
 Synthetic random-walk measurements can be correlated across random splits; real

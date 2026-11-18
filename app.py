@@ -60,6 +60,8 @@ cols = st.columns(4)
 for col, label, value in zip(cols, ['Dataset records', 'Test failure recall', 'Test precision', 'Decision threshold'],
                             [f'{metrics["rows"]:,}', f'{test["recall"]:.1%}', f'{test["precision"]:.1%}', f'{bundle["threshold"]:.2f}']):
     col.metric(label, value)
+st.metric('Test accuracy', f'{test["accuracy"]:.2%}')
+st.caption('Evaluation update: this existing synthetic test set has been inspected in earlier versions; confirm improvements on new independent data before deployment decisions.')
 st.write('')
 single, batch, evaluation = st.tabs(['Condition check', 'Batch analysis', 'Model evaluation'])
 with single:
@@ -139,11 +141,15 @@ with batch:
             st.error(str(exc))
     if 'batch_output' in st.session_state:
         output = st.session_state['batch_output']
+        st.info(f'{len(output)} records analyzed • {int(output.prediction.sum())} failure alerts • {len(output) - int(output.prediction.sum())} without a predicted failure')
         st.dataframe(output, width='stretch')
         st.download_button('Download predictions', output.to_csv(index=False), 'predictions.csv', 'text/csv', on_click=track, args=('predictions_download',))
 
 with evaluation:
     st.subheader('Evidence behind the model')
+    tn, fp, fn, tp = sum(test['confusion_matrix'], [])
+    st.write(f'On 2,000 test records: {tp} failures detected, {fn} failures missed, and {fp} false alarms.')
+    st.write('The new candidate combines temperature difference, mechanical power (torque × angular speed), and wear × torque with the original six inputs. These describe operating relationships; they are not proof of the cause of a failure.')
     st.caption('6,000 train / 2,000 validation / 2,000 test. Model and threshold chosen only on validation F2.')
     comparison = pd.DataFrame(metrics['test']).T[['accuracy','precision','recall','f1','f2','average_precision','roc_auc']]
     st.dataframe(comparison.style.format('{:.3f}'), width='stretch')

@@ -1,0 +1,4 @@
+machine_type,air_temperature,process_temperature,rotational_speed,torque,tool_wear
+L,298.5,308.2,1500,35.0,20
+M,300.1,310.0,1450,42.0,80
+M,302.2,310.1,1368,51.6,12
