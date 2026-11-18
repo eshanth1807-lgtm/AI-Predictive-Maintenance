@@ -33,13 +33,14 @@ def build_report():
     p('2. Dataset and leakage prevention', 'Heading2')
     p(f'UCI AI4I 2020 contains {m["rows"]:,} synthetic records, with {m["failures"]} failure labels ({m["failures"]/m["rows"]:.2%}). Inputs are machine type, air and process temperature, rotational speed, torque and tool wear. UDI and Product ID are excluded. TWF, HDF, PWF, OSF and RNF never enter the model; they are used only for post-test error analysis. The original labels are retained unchanged.')
     p('3. Experimental design', 'Heading2')
+    p('This revision adds histogram gradient boosting with temperature difference, mechanical power and wear-times-torque interactions derived only from input measurements. The existing test set was inspected in earlier versions, so the comparison is developmental and requires fresh independent confirmation.')
     p('A fixed, stratified 60/20/20 split creates 6,000 training, 2,000 validation and 2,000 test records. One-hot encoding and scaling are fitted only on training data. Candidates are a prior baseline, balanced logistic regression, a depth-limited decision tree and a 350-tree random forest. For each learned model, the validation threshold maximizes F2 over 0.05-0.95 in 0.01 increments. F2 emphasizes recall; it is not a quantified maintenance cost. The winning model is chosen by validation F2 before test evaluation. There is no refit on validation or test data.')
     p(f'Selected model: {m["selected_model"]}; decision threshold: {m["threshold"]:.2f}. Random splits can overestimate generalization because neighboring synthetic records share operating regimes. Future work must include chronological and machine-held-out evaluation on real data.')
     story.append(PageBreak())
     p('4. Held-out results', 'Heading1')
     rows = [['Model', 'Accuracy', 'Precision', 'Recall', 'F1', 'AP']]
     for name, values in m['test'].items():
-        rows.append([name] + [f'{values[k]:.3f}' for k in ['accuracy','precision','recall','f1','average_precision']])
+        rows.append([name.replace('Gradient boosting with operating interactions', 'Boosting + interactions')] + [f'{values[k]:.3f}' for k in ['accuracy','precision','recall','f1','average_precision']])
     table(rows)
     p('All results use each model\'s validation-selected threshold (baseline: 0.50). AP means average precision. Accuracy alone is misleading because normal records dominate the dataset.')
     story.append(Image(str(ROOT / 'reports/confusion_matrix.png'), width=4.8*inch, height=3.6*inch))
