@@ -183,7 +183,9 @@ Downloads tracked: input template, batch prediction CSV and research report.
 Counts start with this version; historical prediction rows remain available privately
 but cannot be attributed to past visits. Browser sessions are not unique people or
 concurrent users. API requests have no visitor identity. Chart dates are UTC.
-Analytics stores action metadata only, never IP addresses, filenames or sensor readings.
+Analytics stores action metadata plus the visitor's IP address and reported browser/device details for new dashboard activity. These details are visible only in the authenticated admin dashboard and its export. The public dashboard displays a collection notice. Uploaded filenames are not recorded; submitted sensor readings remain in the separate private prediction history.
+
+Cloudflare Quick Tunnel visits use the reported `CF-Connecting-IP` header, with its source labeled in the activity log. Direct local visits may show a loopback address. Device and browser labels are inferred from the user agent and can be inaccurate or spoofed; IP addresses do not uniquely identify people. Historical events retain blank visitor fields. Restart Streamlit after updating Python modules so the running app loads the new code.
 Prediction storage separately retains submitted readings and model results for the admin.
 
 `GET /history` and `GET /admin/usage?days=30` now require

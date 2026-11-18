@@ -7,7 +7,7 @@ from pydantic import ValidationError
 from maintenance.config import ROOT, METRICS_PATH, NOTICE
 from maintenance.schema import MachineInput
 from maintenance.predictor import load_bundle, predict_many
-from maintenance.analytics import event
+from maintenance.analytics import event, visitor_details
 from maintenance.admin import render as render_admin, is_authenticated
 
 st.set_page_config(page_title='MachineWatch | Failure Detection', page_icon='⚙️', layout='wide')
@@ -21,12 +21,13 @@ elif st.query_params.get('admin') == '1':
 if page == 'Admin dashboard':
     render_admin()
     st.stop()
+visitor = visitor_details(st.context.headers, st.context.ip_address)
 if 'visitor_session' not in st.session_state:
     st.session_state['visitor_session'] = uuid.uuid4().hex
-    event('visit', session=st.session_state['visitor_session'])
+    event('visit', session=st.session_state['visitor_session'], visitor=visitor)
 def track(action, **kwargs):
-    event(action, session=st.session_state['visitor_session'], **kwargs)
-st.caption('Usage notice: anonymous sessions, feature actions and outcomes are counted. Submitted readings are saved privately for the administrator. No IP addresses or uploaded filenames are recorded.')
+    event(action, session=st.session_state['visitor_session'], visitor=visitor, **kwargs)
+st.caption('Usage notice: this app stores your IP address, reported browser/device details, feature activity and submitted readings privately for the administrator. Uploaded filenames are not recorded.')
 st.markdown('''<style>
 .block-container {padding-top:2rem; max-width:1250px;}
 [data-testid="stMetric"] {background:#102937; border:1px solid #244351; border-radius:12px; padding:18px;}
