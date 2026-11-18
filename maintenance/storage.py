@@ -18,6 +18,11 @@ def connect():
         created_at TEXT NOT NULL, action TEXT NOT NULL, source TEXT NOT NULL,
         session TEXT NOT NULL, records INTEGER NOT NULL, failures INTEGER NOT NULL, status TEXT NOT NULL)""")
     connection.execute('CREATE INDEX IF NOT EXISTS events_created_at ON events(created_at)')
+    columns = {row[1] for row in connection.execute('PRAGMA table_info(events)')}
+    for name in ('ip_address', 'ip_source', 'device', 'browser', 'user_agent'):
+        if name not in columns:
+            connection.execute(f"ALTER TABLE events ADD COLUMN {name} TEXT NOT NULL DEFAULT ''")
+    connection.commit()
     return connection
 
 

@@ -78,6 +78,7 @@ def render():
             b.subheader('Features used')
             b.bar_chart(frame.groupby('action').size())
             st.subheader('Recent activity')
+            st.caption('IP address and device details are recorded for new activity only. Device/browser labels are inferred from the reported user agent and may be inaccurate or spoofed. Shared networks and VPNs can share an IP; these fields do not identify a person. Local access may show a loopback address. Older records have blank details.')
             public = frame.drop(columns=['session', 'id'])
             st.dataframe(public.head(200), width='stretch', hide_index=True)
             st.download_button('Export usage CSV', public.to_csv(index=False), 'usage.csv', 'text/csv')
